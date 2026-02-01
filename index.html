@@ -1,0 +1,1829 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TikTok Affiliate Product Evaluator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .auth-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .auth-box {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 50px 40px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            max-width: 450px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .auth-header h1 {
+            font-size: 2.5em;
+            background: linear-gradient(90deg, #ff0080, #00d4ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .auth-header p {
+            color: #aaa;
+            font-size: 1.1em;
+        }
+
+        .auth-form {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .input-group label {
+            color: #00d4ff;
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+
+        .input-group input {
+            padding: 15px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #ff0080;
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .password-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .password-wrapper input {
+            width: 100%;
+            padding-right: 45px;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .password-toggle:hover {
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .password-toggle svg {
+            width: 20px;
+            height: 20px;
+            stroke: #aaa;
+            transition: stroke 0.3s;
+        }
+
+        .password-toggle:hover svg {
+            stroke: #00d4ff;
+        }
+
+        .auth-btn {
+            padding: 18px;
+            border: none;
+            background: #ff0080;
+            color: #fff;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 600;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+
+        .auth-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(255, 0, 128, 0.4);
+            background: #e6006b;
+        }
+
+        .auth-footer {
+            text-align: center;
+            margin-top: 25px;
+            color: #888;
+            font-size: 0.9em;
+        }
+
+        .auth-footer a {
+            color: #00d4ff;
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .auth-footer a:hover {
+            text-decoration: underline;
+        }
+
+        .message {
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            display: none;
+            border: 1px solid;
+            margin-bottom: 20px;
+        }
+
+        .error-message {
+            background: rgba(255, 0, 0, 0.2);
+            color: #ff6b6b;
+            border-color: rgba(255, 0, 0, 0.3);
+        }
+
+        .success-message {
+            background: rgba(0, 255, 136, 0.2);
+            color: #00ff88;
+            border-color: rgba(0, 255, 136, 0.3);
+        }
+
+        .app-container {
+            display: none;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            padding: 20px;
+            margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            position: relative;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            background: linear-gradient(90deg, #ff0080, #00d4ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .user-info {
+            color: #00d4ff;
+            font-size: 1.1em;
+            margin-top: 10px;
+        }
+
+        .role-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            margin-left: 10px;
+            font-weight: 600;
+        }
+
+        .role-admin {
+            background: linear-gradient(135deg, #ff0080, #ff4444);
+        }
+
+        .role-manager {
+            background: linear-gradient(135deg, #00d4ff, #0088ff);
+        }
+
+        .role-user {
+            background: linear-gradient(135deg, #00ff88, #00d4aa);
+        }
+
+        .logout-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 10px 25px;
+            background: rgba(255, 0, 128, 0.3);
+            border: none;
+            color: #fff;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 0, 128, 0.5);
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .nav-tabs button {
+            padding: 12px 30px;
+            border: none;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 16px;
+        }
+
+        .nav-tabs button.active {
+            background: #ff0080;
+        }
+
+        .nav-tabs button:hover {
+            transform: translateY(-2px);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .form-section {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            margin-bottom: 30px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #00d4ff;
+        }
+
+        input, select {
+            padding: 12px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #ff0080;
+        }
+
+        select option {
+            background: #1a1a2e;
+            color: #fff;
+        }
+
+        .star-rating {
+            display: flex;
+            gap: 12px;
+            font-size: 32px;
+            padding: 5px 0;
+        }
+
+        .star {
+            cursor: pointer;
+            color: rgba(255, 255, 255, 0.1);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            user-select: none;
+        }
+
+        .star.active {
+            background: linear-gradient(180deg, #fff5aa 0%, #ffd700 50%, #f9a602 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.6));
+            transform: scale(1.1);
+        }
+
+        .star:hover {
+            transform: scale(1.2);
+            color: #ffd700;
+        }
+
+        .btn {
+            padding: 15px 40px;
+            border: none;
+            background: #ff0080;
+            color: #fff;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 600;
+            transition: all 0.3s;
+            width: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(255, 0, 128, 0.4);
+            background: #e6006b;
+        }
+
+        .btn-secondary {
+            background: rgba(0, 212, 255, 0.3);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(0, 212, 255, 0.5);
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.4);
+        }
+
+        .btn-success {
+            background: rgba(0, 255, 136, 0.3);
+            padding: 8px 20px;
+            font-size: 14px;
+        }
+
+        .btn-success:hover {
+            background: rgba(0, 255, 136, 0.5);
+            box-shadow: 0 5px 15px rgba(0, 255, 136, 0.4);
+        }
+
+        .btn-danger {
+            background: rgba(255, 0, 128, 0.3);
+            padding: 8px 20px;
+            font-size: 14px;
+        }
+
+        .btn-danger:hover {
+            background: rgba(255, 0, 128, 0.6);
+            box-shadow: 0 5px 15px rgba(255, 0, 128, 0.4);
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+        }
+
+        .product-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 25px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            border-color: #ff0080;
+        }
+
+        .product-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 15px;
+        }
+
+        .product-title {
+            font-size: 1.4em;
+            color: #00d4ff;
+            margin-bottom: 5px;
+        }
+
+        .category-badge {
+            background: rgba(255, 0, 128, 0.3);
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 0.85em;
+        }
+
+        .approval-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            margin-top: 5px;
+            font-weight: 600;
+        }
+
+        .approved {
+            background: rgba(0, 255, 136, 0.3);
+            color: #00ff88;
+        }
+
+        .pending {
+            background: rgba(255, 215, 0, 0.3);
+            color: #ffd700;
+        }
+
+        .creator-info {
+            font-size: 0.85em;
+            color: #aaa;
+            margin-top: 10px;
+        }
+
+        .score-circle {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+            font-weight: bold;
+            margin: 20px auto;
+            border: 5px solid;
+        }
+
+        .score-PROMOTE {
+            background: linear-gradient(135deg, #00ff88, #00d4ff);
+            border-color: #00ff88;
+        }
+
+        .score-CONSIDER {
+            background: linear-gradient(135deg, #ffd700, #ff8800);
+            border-color: #ffd700;
+        }
+
+        .score-SKIP {
+            background: linear-gradient(135deg, #ff0080, #ff4444);
+            border-color: #ff0080;
+        }
+
+        .recommendation {
+            text-align: center;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            font-weight: 600;
+            font-size: 1.2em;
+        }
+
+        .rec-PROMOTE {
+            background: rgba(0, 255, 136, 0.2);
+            color: #00ff88;
+        }
+
+        .rec-CONSIDER {
+            background: rgba(255, 215, 0, 0.2);
+            color: #ffd700;
+        }
+
+        .rec-SKIP {
+            background: rgba(255, 0, 128, 0.2);
+            color: #ff0080;
+        }
+
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .stat-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-label {
+            font-size: 0.85em;
+            color: #aaa;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #00d4ff;
+        }
+
+        .delete-btn {
+            background: rgba(255, 0, 128, 0.3);
+            border: none;
+            padding: 8px 20px;
+            border-radius: 20px;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 15px;
+            width: 100%;
+        }
+
+        .delete-btn:hover {
+            background: rgba(255, 0, 128, 0.6);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .action-buttons button {
+            flex: 1;
+        }
+
+        .compare-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #888;
+            grid-column: 1 / -1;
+        }
+
+        .empty-state h3 {
+            font-size: 1.8em;
+            margin-bottom: 10px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #00d4ff;
+            font-size: 1.2em;
+            grid-column: 1 / -1;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-card h3 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #ff0080, #00d4ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-card p {
+            color: #aaa;
+            font-size: 1.1em;
+        }
+
+        .users-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .users-table th,
+        .users-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .users-table th {
+            background: rgba(255, 0, 128, 0.2);
+            color: #00d4ff;
+            font-weight: 600;
+        }
+
+        .users-table tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .activity-log {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .log-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            border-left: 4px solid #00d4ff;
+        }
+
+        .log-time {
+            color: #aaa;
+            font-size: 0.85em;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .compare-section {
+                grid-template-columns: 1fr;
+            }
+
+            .logout-btn {
+                position: static;
+                margin-top: 15px;
+                width: 100%;
+            }
+
+            .users-table {
+                font-size: 0.85em;
+            }
+        }
+
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+
+        .custom-number-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+
+        .custom-number-wrapper input {
+            width: 100%;
+            padding-right: 35px !important;
+        }
+
+        .custom-arrows {
+            position: absolute;
+            right: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .custom-arrows svg {
+            transition: all 0.2s ease;
+        }
+
+        .custom-arrows div:hover svg {
+            stroke: #00d4ff; 
+            filter: drop-shadow(0 0 5px #00d4ff);
+            transform: scale(1.2);
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Page -->
+    <div id="loginPage" class="auth-container">
+        <div class="auth-box">
+            <div class="auth-header">
+                <h1>🎯 TikTok Affiliate</h1>
+                <p>Product Evaluator System</p>
+            </div>
+            <form id="loginForm" class="auth-form">
+                <div class="message error-message" id="loginError"></div>
+                <div class="input-group">
+                    <label>Username</label>
+                    <input type="text" id="loginUsername" placeholder="Enter your username" required>
+                </div>
+                <div class="input-group">
+                    <label>Password</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="loginPassword" placeholder="Enter your password" required>
+                        <button type="button" class="password-toggle" onclick="togglePassword('loginPassword', this)">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <button type="submit" class="auth-btn">Login</button>
+            </form>
+            <div class="auth-footer">
+                <p>Don't have an account? <a id="showRegisterLink">Register here</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Register Page -->
+    <div id="registerPage" class="auth-container" style="display: none;">
+        <div class="auth-box">
+            <div class="auth-header">
+                <h1>🎯 Create Account</h1>
+                <p>Join TikTok Affiliate Evaluator</p>
+            </div>
+            <form id="registerForm" class="auth-form">
+                <div class="message error-message" id="registerError"></div>
+                <div class="message success-message" id="registerSuccess"></div>
+                <div class="input-group">
+                    <label>Full Name</label>
+                    <input type="text" id="regFullName" placeholder="Enter your full name" required>
+                </div>
+                <div class="input-group">
+                    <label>Email</label>
+                    <input type="email" id="regEmail" placeholder="Enter your email" required>
+                </div>
+                <div class="input-group">
+                    <label>Username</label>
+                    <input type="text" id="regUsername" placeholder="Choose a username" required minlength="3">
+                </div>
+                <div class="input-group">
+                    <label>Password</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="regPassword" placeholder="Choose a password" required minlength="6">
+                        <button type="button" class="password-toggle" onclick="togglePassword('regPassword', this)">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <button type="submit" class="auth-btn">Register</button>
+            </form>
+            <div class="auth-footer">
+                <p>Already have an account? <a id="showLoginLink">Login here</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Application -->
+    <div id="mainApp" class="app-container">
+        <div class="container">
+            <header>
+                <h1>🎯 TikTok Affiliate Evaluator</h1>
+                <p>Rate, Analyze, and Compare Products for Maximum Profit</p>
+                <p class="user-info">
+                    Welcome, <span id="userFullName"></span>!
+                    <span id="userRoleBadge" class="role-badge"></span>
+                </p>
+                <button class="logout-btn" id="logoutBtn">Logout</button>
+            </header>
+
+            <div class="nav-tabs" id="navTabs">
+                <button class="active" data-tab="add">➕ Add Product</button>
+                <button data-tab="dashboard">📊 Dashboard</button>
+                <button data-tab="compare">⚖️ Compare</button>
+                <!-- Admin and Manager only tabs -->
+                <button data-tab="admin" id="adminTab" style="display: none;">👥 User Management</button>
+                <button data-tab="logs" id="logsTab" style="display: none;">📋 Activity Logs</button>
+            </div>
+
+            <!-- Add Product Tab -->
+            <div id="add-tab" class="tab-content active">
+                <div class="form-section">
+                    <h2 style="margin-bottom: 25px; color: #ff0080;">Add New Product</h2>
+                    <div class="message error-message" id="productError"></div>
+                    <div class="message success-message" id="productSuccess"></div>
+                    <form id="productForm">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Product Name *</label>
+                                <input type="text" id="productName" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Category *</label>
+                                <select id="category" required>
+                                    <option value="">Select Category</option>
+                                    <option value="Electronics">Electronics</option>
+                                    <option value="Fashion">Fashion</option>
+                                    <option value="Beauty">Beauty</option>
+                                    <option value="Home">Home & Garden</option>
+                                    <option value="Sports">Sports & Fitness</option>
+                                    <option value="Toys">Toys & Games</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Price (₱) *</label>
+                                <div class="custom-number-wrapper">
+                                    <input type="number" id="price" step="0.01" min="0" required>
+                                    <div class="custom-arrows">
+                                        <div class="up">
+                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#ff0080" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
+                                        </div>
+                                        <div class="down">
+                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#ff0080" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Commission Rate (%) *</label>
+                                <div class="custom-number-wrapper">
+                                    <input type="number" id="commission" step="0.1" min="0" max="100" required>
+                                    <div class="custom-arrows">
+                                        <div class="up">
+                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#ff0080" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
+                                        </div>
+                                        <div class="down">
+                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#ff0080" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Product Rating (1-5) *</label>
+                                <div class="star-rating" id="starRating">
+                                    <span class="star" data-value="1">★</span>
+                                    <span class="star" data-value="2">★</span>
+                                    <span class="star" data-value="3">★</span>
+                                    <span class="star" data-value="4">★</span>
+                                    <span class="star" data-value="5">★</span>
+                                </div>
+                                <input type="hidden" id="rating" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn">Calculate & Save Product</button>
+                    </form>
+                </div>
+            </div>
+
+<!-- Dashboard Tab -->
+            <div id="dashboard-tab" class="tab-content">
+                <div class="form-section" style="margin-bottom: 20px;">
+                    <h2 style="margin-bottom: 20px; color: #ff0080;">Filter & Sort Products</h2>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px;">
+                        <div class="form-group">
+                            <label>Filter by Category</label>
+                            <select id="filterCategory">
+                                <option value="">All Categories</option>
+                                <option value="Electronics">Electronics</option>
+                                <option value="Fashion">Fashion</option>
+                                <option value="Beauty">Beauty</option>
+                                <option value="Home">Home & Garden</option>
+                                <option value="Sports">Sports & Fitness</option>
+                                <option value="Toys">Toys & Games</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Filter by Recommendation</label>
+                            <select id="filterRecommendation">
+                                <option value="">All Recommendations</option>
+                                <option value="PROMOTE">✅ PROMOTE</option>
+                                <option value="CONSIDER">⚠️ CONSIDER</option>
+                                <option value="SKIP">❌ SKIP</option>
+                            </select>
+                        </div>
+                        <div class="form-group" id="filterApprovalGroup" style="display: none;">
+                            <label>Filter by Approval</label>
+                            <select id="filterApproval">
+                                <option value="">All Status</option>
+                                <option value="1">✅ Approved</option>
+                                <option value="0">⏳ Pending</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Sort By</label>
+                            <select id="sortBy">
+                                <option value="date_desc">Newest First</option>
+                                <option value="date_asc">Oldest First</option>
+                                <option value="score_desc">Highest Score</option>
+                                <option value="score_asc">Lowest Score</option>
+                                <option value="price_desc">Highest Price</option>
+                                <option value="price_asc">Lowest Price</option>
+                                <option value="commission_desc">Highest Commission</option>
+                                <option value="commission_asc">Lowest Commission</option>
+                                <option value="earnings_desc">Highest Earnings</option>
+                                <option value="earnings_asc">Lowest Earnings</option>
+                                <option value="rating_desc">Highest Rating</option>
+                                <option value="rating_asc">Lowest Rating</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <button class="btn" id="applyFiltersBtn" style="padding: 12px 20px; font-size: 14px;">Apply Filters</button>
+                        <button class="btn" id="resetFiltersBtn" style="padding: 12px 20px; font-size: 14px; background: rgba(255, 255, 255, 0.1);">Reset Filters</button>
+                    </div>
+                </div>
+                <div id="productsContainer" class="products-grid"></div>
+            </div>
+
+            <!-- Compare Tab -->
+            <div id="compare-tab" class="tab-content">
+                <div class="form-section">
+                    <h2 style="margin-bottom: 20px; color: #ff0080;">Compare Products</h2>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                        <select id="compareProduct1">
+                            <option value="">Select Product 1</option>
+                        </select>
+                        <select id="compareProduct2">
+                            <option value="">Select Product 2</option>
+                        </select>
+                    </div>
+                    <button class="btn" id="compareBtn">Compare</button>
+                </div>
+                <div id="compareResult" class="compare-section"></div>
+            </div>
+
+            <!-- Admin Tab (Admin Only) -->
+            <div id="admin-tab" class="tab-content">
+                <div class="form-section">
+                    <h2 style="margin-bottom: 20px; color: #ff0080;">👥 User Management</h2>
+                    
+                    <!-- Statistics -->
+                    <div class="stats-grid" id="adminStats">
+                        <div class="stat-card">
+                            <h3 id="totalUsers">0</h3>
+                            <p>Total Users</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3 id="activeUsers">0</h3>
+                            <p>Active Users</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3 id="totalProducts">0</h3>
+                            <p>Total Products</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3 id="pendingProducts">0</h3>
+                            <p>Pending Approval</p>
+                        </div>
+                    </div>
+
+                    <!-- Users Table -->
+                    <div style="overflow-x: auto;">
+                        <table class="users-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Username</th>
+                                    <th>Full Name</th>
+                                    <th>Email</th>
+                                    <th>Role</th>
+                                    <th>Products</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usersTableBody">
+                                <tr><td colspan="8" style="text-align: center; padding: 40px; color: #aaa;">Loading users...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Activity Logs Tab (Admin & Manager) -->
+            <div id="logs-tab" class="tab-content">
+                <div class="form-section">
+                    <h2 style="margin-bottom: 20px; color: #ff0080;">📋 Activity Logs</h2>
+                    <div class="activity-log" id="activityLog">
+                        <div style="text-align: center; padding: 40px; color: #aaa;">Loading activity logs...</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        let products = [];
+        let filteredProducts = [];
+        let selectedRating = 0;
+        let currentUser = null;
+        let allUsers = [];
+
+        // Page navigation functions
+        function showLoginPage() {
+            document.getElementById('loginPage').style.display = 'flex';
+            document.getElementById('registerPage').style.display = 'none';
+            document.getElementById('mainApp').style.display = 'none';
+        }
+
+        function showRegisterPage() {
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('registerPage').style.display = 'flex';
+            document.getElementById('mainApp').style.display = 'none';
+        }
+
+        function showMainApp() {
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('registerPage').style.display = 'none';
+            document.getElementById('mainApp').style.display = 'block';
+            
+            if (currentUser) {
+                document.getElementById('userFullName').textContent = currentUser.full_name;
+                
+                // Set role badge
+                const roleBadge = document.getElementById('userRoleBadge');
+                roleBadge.textContent = currentUser.role.toUpperCase();
+                roleBadge.className = `role-badge role-${currentUser.role}`;
+                
+                // Show admin/manager tabs
+                if (currentUser.role === 'admin') {
+                    document.getElementById('adminTab').style.display = 'block';
+                    document.getElementById('logsTab').style.display = 'block';
+                    document.getElementById('filterApprovalGroup').style.display = 'block';
+                } else if (currentUser.role === 'manager') {
+                    document.getElementById('logsTab').style.display = 'block';
+                    document.getElementById('filterApprovalGroup').style.display = 'block';
+                }
+            }
+            initializeStarRating();
+        }
+
+        // Check authentication
+        function checkAuth() {
+            fetch('api/auth.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: 'action=check_session'
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.logged_in) {
+                    currentUser = data.user;
+                    showMainApp();
+                    loadProducts();
+                    if (currentUser.role === 'admin') {
+                        loadAdminStats();
+                        loadUsers();
+                    }
+                    if (currentUser.role === 'admin' || currentUser.role === 'manager') {
+                        loadActivityLogs();
+                    }
+                } else {
+                    showLoginPage();
+                }
+            })
+            .catch(() => showLoginPage());
+        }
+
+        // Star rating
+        function initializeStarRating() {
+            const stars = document.querySelectorAll('.star');
+            stars.forEach(star => {
+                star.addEventListener('click', function() {
+                    selectedRating = parseInt(this.dataset.value);
+                    document.getElementById('rating').value = selectedRating;
+                    updateStars();
+                });
+            });
+        }
+
+        function updateStars() {
+            const stars = document.querySelectorAll('.star');
+            stars.forEach(star => {
+                const val = parseInt(star.dataset.value);
+                if (val <= selectedRating) {
+                    star.classList.add('active');
+                } else {
+                    star.classList.remove('active');
+                }
+            });
+        }
+
+        // Load products
+        function loadProducts() {
+            document.getElementById('productsContainer').innerHTML = '<div class="loading">Loading products...</div>';
+            
+            fetch('api/products.php?action=read')
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    products = data.products;
+                    filteredProducts = [...products];
+                    renderDashboard();
+                    updateCompareSelects();
+                } else {
+                    document.getElementById('productsContainer').innerHTML = `<div class="empty-state"><h3>Error loading products</h3></div>`;
+                }
+            })
+            .catch(() => {
+                document.getElementById('productsContainer').innerHTML = `<div class="empty-state"><h3>Connection error</h3></div>`;
+            });
+        }
+
+        // Filter and Sort Functions
+        function applyFiltersAndSort() {
+            const category = document.getElementById('filterCategory').value;
+            const recommendation = document.getElementById('filterRecommendation').value;
+            const approval = document.getElementById('filterApproval') ? document.getElementById('filterApproval').value : '';
+            const sortBy = document.getElementById('sortBy').value;
+
+            filteredProducts = [...products];
+
+            // Apply filters
+            filteredProducts = filteredProducts.filter(product => {
+                const categoryMatch = !category || product.category === category;
+                const recommendationMatch = !recommendation || product.recommendation === recommendation;
+                const approvalMatch = !approval || product.is_approved == approval;
+                return categoryMatch && recommendationMatch && approvalMatch;
+            });
+
+            // Apply sorting
+            filteredProducts.sort((a, b) => {
+                switch(sortBy) {
+                    case 'date_desc': return b.id - a.id;
+                    case 'date_asc': return a.id - b.id;
+                    case 'score_desc': return parseFloat(b.score) - parseFloat(a.score);
+                    case 'score_asc': return parseFloat(a.score) - parseFloat(b.score);
+                    case 'price_desc': return parseFloat(b.price) - parseFloat(a.price);
+                    case 'price_asc': return parseFloat(a.price) - parseFloat(b.price);
+                    case 'commission_desc': return parseFloat(b.commission_rate) - parseFloat(a.commission_rate);
+                    case 'commission_asc': return parseFloat(a.commission_rate) - parseFloat(b.commission_rate);
+                    case 'earnings_desc':
+                        const earningsB = (parseFloat(b.price) * parseFloat(b.commission_rate)) / 100;
+                        const earningsA = (parseFloat(a.price) * parseFloat(a.commission_rate)) / 100;
+                        return earningsB - earningsA;
+                    case 'earnings_asc':
+                        const earningsB2 = (parseFloat(b.price) * parseFloat(b.commission_rate)) / 100;
+                        const earningsA2 = (parseFloat(a.price) * parseFloat(a.commission_rate)) / 100;
+                        return earningsA2 - earningsB2;
+                    case 'rating_desc': return parseFloat(b.quality_rating) - parseFloat(a.quality_rating);
+                    case 'rating_asc': return parseFloat(a.quality_rating) - parseFloat(b.quality_rating);
+                    default: return 0;
+                }
+            });
+
+            renderDashboard();
+        }
+
+        function resetFilters() {
+            document.getElementById('filterCategory').value = '';
+            document.getElementById('filterRecommendation').value = '';
+            if (document.getElementById('filterApproval')) {
+                document.getElementById('filterApproval').value = '';
+            }
+            document.getElementById('sortBy').value = 'date_desc';
+            filteredProducts = [...products];
+            renderDashboard();
+        }
+
+        // Render dashboard
+        function renderDashboard() {
+            const container = document.getElementById('productsContainer');
+            
+            if (filteredProducts.length === 0) {
+                container.innerHTML = '<div class="empty-state"><h3>No products found</h3><p>Try adjusting your filters or add a new product.</p></div>';
+                return;
+            }
+
+            container.innerHTML = filteredProducts.map(p => {
+                const earnings = (parseFloat(p.price) * parseFloat(p.commission_rate)) / 100;
+                const canApprove = currentUser.role === 'admin' || currentUser.role === 'manager';
+                const isOwner = p.user_id == currentUser.id;
+                const canDelete = currentUser.role === 'admin' || isOwner;
+                
+                return `
+                    <div class="product-card">
+                        <div class="product-header">
+                            <div>
+                                <h3 class="product-title">${p.product_name}</h3>
+                                <span class="category-badge">${p.category}</span>
+                                <span class="approval-badge ${p.is_approved == 1 ? 'approved' : 'pending'}">
+                                    ${p.is_approved == 1 ? '✅ Approved' : '⏳ Pending'}
+                                </span>
+                                ${currentUser.role !== 'user' ? `<div class="creator-info">Created by: ${p.creator_name || p.creator_username}</div>` : ''}
+                                ${p.is_approved == 1 && p.approver_username ? `<div class="creator-info">Approved by: ${p.approver_username}</div>` : ''}
+                            </div>
+                        </div>
+                        
+                        <div class="score-circle score-${p.recommendation}">
+                            ${Math.round(p.score)}
+                        </div>
+
+                        <div class="recommendation rec-${p.recommendation}">
+                            ${p.recommendation === 'PROMOTE' ? '✅ PROMOTE' : p.recommendation === 'CONSIDER' ? '⚠️ CONSIDER' : '❌ SKIP'}
+                        </div>
+
+                        <div class="stats-row">
+                            <div class="stat-item">
+                                <div class="stat-label">Price</div>
+                                <div class="stat-value">₱${parseFloat(p.price).toLocaleString()}</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-label">Your Commission</div>
+                                <div class="stat-value">${p.commission_rate}%</div>
+                            </div>
+                        </div>
+
+                        <div class="stat-item" style="margin-bottom: 10px; background: rgba(0, 212, 255, 0.1);">
+                            <div class="stat-label" style="color: #00ff88;">You Earn (Per Sale)</div>
+                            <div class="stat-value" style="color: #00ff88;">₱${earnings.toLocaleString(undefined, {minimumFractionDigits: 2})}</div>
+                        </div>
+
+                        <div class="stat-item">
+                            <div class="stat-label">Product Rating</div>
+                            <div class="stat-value" style="color: #ffd700;">${p.quality_rating}/5 ★</div>
+                        </div>
+
+                        <div class="action-buttons">
+                            ${canApprove && p.is_approved == 0 ? `
+                                <button class="btn btn-success" onclick="approveProduct(${p.id})">
+                                    ✅ Approve
+                                </button>
+                            ` : ''}
+                            ${canApprove && p.is_approved == 1 ? `
+                                <button class="btn btn-danger" onclick="unapproveProduct(${p.id})">
+                                    ❌ Unapprove
+                                </button>
+                            ` : ''}
+                            ${canDelete ? `
+                                <button class="btn btn-danger" onclick="deleteProduct(${p.id})">
+                                    🗑️ Delete
+                                </button>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Approve Product
+        function approveProduct(id) {
+            if (confirm('Approve this product?')) {
+                fetch('api/products.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: `action=approve&product_id=${id}`
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Product approved successfully');
+                        loadProducts();
+                        if (currentUser.role === 'admin') {
+                            loadAdminStats();
+                        }
+                    } else {
+                        alert('Error: ' + data.message);
+                    }
+                });
+            }
+        }
+
+        // Unapprove Product
+        function unapproveProduct(id) {
+            if (confirm('Remove approval from this product?')) {
+                fetch('api/products.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: `action=unapprove&product_id=${id}`
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Product unapproved successfully');
+                        loadProducts();
+                        if (currentUser.role === 'admin') {
+                            loadAdminStats();
+                        }
+                    } else {
+                        alert('Error: ' + data.message);
+                    }
+                });
+            }
+        }
+
+        // Delete Product
+        function deleteProduct(id) {
+            if (!id) {
+                alert("Error: Product ID is missing.");
+                return;
+            }
+
+            if (confirm('Are you sure you want to delete this product?')) {
+                const formData = new URLSearchParams();
+                formData.append('action', 'delete');
+                formData.append('product_id', id);
+
+                fetch('api/products.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: formData.toString()
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        products = products.filter(p => p.id != id);
+                        filteredProducts = filteredProducts.filter(p => p.id != id);
+                        renderDashboard();
+                        updateCompareSelects();
+                        alert('Product deleted successfully');
+                        if (currentUser.role === 'admin') {
+                            loadAdminStats();
+                        }
+                    } else {
+                        alert('Server Error: ' + data.message);
+                    }
+                })
+                .catch(err => {
+                    console.error('Delete error:', err);
+                    alert('Failed to connect to the server.');
+                });
+            }
+        }
+
+        // Tab Switching
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.nav-tabs button').forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById(`${tabName}-tab`).classList.add('active');
+            event.currentTarget.classList.add('active');
+            
+            if (tabName === 'dashboard') loadProducts();
+            if (tabName === 'admin' && currentUser.role === 'admin') {
+                loadAdminStats();
+                loadUsers();
+            }
+            if (tabName === 'logs' && (currentUser.role === 'admin' || currentUser.role === 'manager')) {
+                loadActivityLogs();
+            }
+        }
+
+        // Update Compare Selects
+        function updateCompareSelects() {
+            const select1 = document.getElementById('compareProduct1');
+            const select2 = document.getElementById('compareProduct2');
+            const options = products.map(p => `<option value="${p.id}">${p.product_name}</option>`).join('');
+            
+            select1.innerHTML = '<option value="">Select Product 1</option>' + options;
+            select2.innerHTML = '<option value="">Select Product 2</option>' + options;
+        }
+
+        // Compare Products
+        function compareProducts() {
+            const id1 = document.getElementById('compareProduct1').value;
+            const id2 = document.getElementById('compareProduct2').value;
+            const resultDiv = document.getElementById('compareResult');
+
+            if (!id1 || !id2) {
+                alert("Please select two products to compare");
+                return;
+            }
+
+            const p1 = products.find(p => p.id == id1);
+            const p2 = products.find(p => p.id == id2);
+
+            resultDiv.innerHTML = [p1, p2].map(product => {
+                const earnings = ((product.price * product.commission_rate) / 100).toFixed(2);
+                
+                return `
+                    <div class="product-card">
+                        <h3 class="product-title">${product.product_name}</h3>
+                        <span class="approval-badge ${product.is_approved == 1 ? 'approved' : 'pending'}">
+                            ${product.is_approved == 1 ? '✅ Approved' : '⏳ Pending'}
+                        </span>
+                        <div class="score-circle score-${product.recommendation}">${product.score}</div>
+                        
+                        <div class="stats-row">
+                            <div class="stat-item">
+                                <div class="stat-label">Price</div>
+                                <div class="stat-value">₱${parseFloat(product.price).toFixed(2)}</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-label">Commission</div>
+                                <div class="stat-value">${product.commission_rate}%</div>
+                            </div>
+                            <div class="stat-item" style="grid-column: span 2; background: rgba(0, 255, 136, 0.1); border: 1px solid rgba(0, 255, 136, 0.2); margin-top: 10px;">
+                                <div class="stat-label" style="color: #00ff88;">You Earn (Per Sale)</div>
+                                <div class="stat-value" style="color: #00ff88;">₱${earnings}</div>
+                            </div>
+                            <div class="stat-item" style="grid-column: span 2;">
+                                <div class="stat-label">Product Rating</div>
+                                <div class="stat-value">${product.quality_rating}/5 ★</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Load Admin Stats
+        function loadAdminStats() {
+            fetch('api/admin.php?action=get_stats')
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('totalUsers').textContent = data.stats.total_users;
+                    document.getElementById('activeUsers').textContent = data.stats.active_users;
+                    document.getElementById('totalProducts').textContent = data.stats.total_products;
+                    document.getElementById('pendingProducts').textContent = data.stats.pending_products;
+                }
+            });
+        }
+
+        // Load Users (Admin only)
+        function loadUsers() {
+            fetch('api/admin.php?action=get_users')
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    allUsers = data.users;
+                    renderUsersTable();
+                }
+            });
+        }
+
+        // Render Users Table
+        function renderUsersTable() {
+            const tbody = document.getElementById('usersTableBody');
+            
+            if (allUsers.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 40px; color: #aaa;">No users found</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = allUsers.map(user => `
+                <tr>
+                    <td>${user.id}</td>
+                    <td>${user.username}</td>
+                    <td>${user.full_name}</td>
+                    <td>${user.email}</td>
+                    <td>
+                        <select onchange="updateUserRole(${user.id}, this.value)" ${user.id == currentUser.id ? 'disabled' : ''}>
+                            <option value="user" ${user.role === 'user' ? 'selected' : ''}>User</option>
+                            <option value="manager" ${user.role === 'manager' ? 'selected' : ''}>Manager</option>
+                            <option value="admin" ${user.role === 'admin' ? 'selected' : ''}>Admin</option>
+                        </select>
+                    </td>
+                    <td>${user.product_count}</td>
+                    <td>
+                        <span class="approval-badge ${user.is_active == 1 ? 'approved' : 'pending'}">
+                            ${user.is_active == 1 ? '✅ Active' : '❌ Inactive'}
+                        </span>
+                    </td>
+                    <td>
+                        ${user.id != currentUser.id ? `
+                            <button class="btn btn-secondary" onclick="toggleUserStatus(${user.id})" style="padding: 5px 10px; font-size: 12px; margin-right: 5px;">
+                                ${user.is_active == 1 ? '🚫 Deactivate' : '✅ Activate'}
+                            </button>
+                            <button class="btn btn-danger" onclick="deleteUser(${user.id})" style="padding: 5px 10px; font-size: 12px;">
+                                🗑️ Delete
+                            </button>
+                        ` : '<span style="color: #aaa;">You</span>'}
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Update User Role
+        function updateUserRole(userId, newRole) {
+            fetch('api/admin.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: `action=update_role&user_id=${userId}&role=${newRole}`
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    alert('User role updated successfully');
+                    loadUsers();
+                    loadAdminStats();
+                } else {
+                    alert('Error: ' + data.message);
+                    loadUsers();
+                }
+            });
+        }
+
+        // Toggle User Status
+        function toggleUserStatus(userId) {
+            if (confirm('Are you sure you want to change this user\'s status?')) {
+                fetch('api/admin.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: `action=toggle_status&user_id=${userId}`
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('User status updated successfully');
+                        loadUsers();
+                        loadAdminStats();
+                    } else {
+                        alert('Error: ' + data.message);
+                    }
+                });
+            }
+        }
+
+// Delete User
+        function deleteUser(userId) {
+            if (confirm('Are you sure you want to delete this user? This will also delete all their products.')) {
+                fetch('api/admin.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: `action=delete_user&user_id=${userId}`
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('User deleted successfully');
+                        loadUsers();
+                        loadAdminStats();
+                        loadProducts();
+                    } else {
+                        alert('Error: ' + data.message);
+                    }
+                });
+            }
+        }
+
+        // Load Activity Logs
+        function loadActivityLogs() {
+            fetch('api/admin.php?action=get_logs&limit=50')
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    renderActivityLogs(data.logs);
+                }
+            });
+        }
+
+        // Render Activity Logs
+        function renderActivityLogs(logs) {
+            const container = document.getElementById('activityLog');
+            
+            if (logs.length === 0) {
+                container.innerHTML = '<div style="text-align: center; padding: 40px; color: #aaa;">No activity logs found</div>';
+                return;
+            }
+
+            container.innerHTML = logs.map(log => `
+                <div class="log-item">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                        <strong>${log.username || log.full_name || 'Unknown User'}</strong>
+                        <span class="log-time">${new Date(log.created_at).toLocaleString()}</span>
+                    </div>
+                    <div style="color: #aaa;">${log.action.replace(/_/g, ' ').toUpperCase()}</div>
+                    ${log.description ? `<div style="margin-top: 5px; font-size: 0.9em;">${log.description}</div>` : ''}
+                    ${log.ip_address ? `<div style="margin-top: 5px; font-size: 0.85em; color: #666;">IP: ${log.ip_address}</div>` : ''}
+                </div>
+            `).join('');
+        }
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Auth navigation
+            document.getElementById('showRegisterLink').addEventListener('click', showRegisterPage);
+            document.getElementById('showLoginLink').addEventListener('click', showLoginPage);
+            
+            // Login
+            document.getElementById('loginForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const username = document.getElementById('loginUsername').value;
+                const password = document.getElementById('loginPassword').value;
+                const errorMsg = document.getElementById('loginError');
+
+                fetch('api/auth.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: `action=login&username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        currentUser = data.user;
+                        errorMsg.style.display = 'none';
+                        showMainApp();
+                        loadProducts();
+                        if (currentUser.role === 'admin') {
+                            loadAdminStats();
+                            loadUsers();
+                        }
+                        if (currentUser.role === 'admin' || currentUser.role === 'manager') {
+                            loadActivityLogs();
+                        }
+                    } else {
+                        errorMsg.textContent = data.message;
+                        errorMsg.style.display = 'block';
+                    }
+                })
+                .catch(err => {
+                    errorMsg.textContent = 'Connection error. Please try again.';
+                    errorMsg.style.display = 'block';
+                });
+            });
+
+            // Register
+            document.getElementById('registerForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const fullName = document.getElementById('regFullName').value;
+                const email = document.getElementById('regEmail').value;
+                const username = document.getElementById('regUsername').value;
+                const password = document.getElementById('regPassword').value;
+                const errorMsg = document.getElementById('registerError');
+                const successMsg = document.getElementById('registerSuccess');
+
+                fetch('api/auth.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: `action=register&full_name=${encodeURIComponent(fullName)}&email=${encodeURIComponent(email)}&username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        successMsg.textContent = data.message;
+                        successMsg.style.display = 'block';
+                        errorMsg.style.display = 'none';
+                        this.reset();
+                        setTimeout(() => showLoginPage(), 2000);
+                    } else {
+                        errorMsg.textContent = data.message;
+                        errorMsg.style.display = 'block';
+                        successMsg.style.display = 'none';
+                    }
+                })
+                .catch(err => {
+                    errorMsg.textContent = 'Connection error. Please try again.';
+                    errorMsg.style.display = 'block';
+                });
+            });
+
+            // Logout
+            document.getElementById('logoutBtn').addEventListener('click', function() {
+                fetch('api/auth.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: 'action=logout'
+                })
+                .then(() => {
+                    currentUser = null;
+                    products = [];
+                    showLoginPage();
+                });
+            });
+
+            // Product Form
+            document.getElementById('productForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const errorMsg = document.getElementById('productError');
+                const successMsg = document.getElementById('productSuccess');
+                
+                const productName = document.getElementById('productName').value;
+                const category = document.getElementById('category').value;
+                const price = document.getElementById('price').value;
+                const commission = document.getElementById('commission').value;
+                const rating = document.getElementById('rating').value;
+
+                if (!rating) {
+                    errorMsg.textContent = 'Please select a product rating';
+                    errorMsg.style.display = 'block';
+                    return;
+                }
+
+                fetch('api/products.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: `action=create&product_name=${encodeURIComponent(productName)}&category=${encodeURIComponent(category)}&price=${price}&commission_rate=${commission}&quality_rating=${rating}`
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        successMsg.textContent = data.message;
+                        successMsg.style.display = 'block';
+                        errorMsg.style.display = 'none';
+                        this.reset();
+                        selectedRating = 0;
+                        updateStars();
+                        setTimeout(() => {
+                            successMsg.style.display = 'none';
+                            switchTab('dashboard');
+                            loadProducts();
+                            if (currentUser.role === 'admin') {
+                                loadAdminStats();
+                            }
+                        }, 1500);
+                    } else {
+                        errorMsg.textContent = data.message;
+                        errorMsg.style.display = 'block';
+                    }
+                });
+            });
+
+            // Tab Navigation
+            document.querySelectorAll('.nav-tabs button').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const tabName = this.getAttribute('data-tab');
+                    switchTab(tabName);
+                });
+            });
+
+            // Filter Buttons
+            document.getElementById('applyFiltersBtn').addEventListener('click', applyFiltersAndSort);
+            document.getElementById('resetFiltersBtn').addEventListener('click', resetFilters);
+
+            // Compare Button
+            document.getElementById('compareBtn').addEventListener('click', compareProducts);
+
+            // Custom number arrows
+            document.querySelectorAll('.custom-arrows .up').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    this.parentElement.previousElementSibling.stepUp();
+                });
+            });
+            document.querySelectorAll('.custom-arrows .down').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    this.parentElement.previousElementSibling.stepDown();
+                });
+            });
+
+            // Check auth on load
+            checkAuth();
+        });
+
+        // Toggle Password Visibility
+        function togglePassword(inputId, button) {
+            const input = document.getElementById(inputId);
+            const svg = button.querySelector('svg');
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                // Eye with slash (hidden state)
+                svg.innerHTML = `
+                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                    <line x1="1" y1="1" x2="23" y2="23"></line>
+                `;
+            } else {
+                input.type = 'password';
+                // Regular eye (visible state)
+                svg.innerHTML = `
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>
