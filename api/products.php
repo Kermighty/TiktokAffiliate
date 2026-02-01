@@ -310,6 +310,38 @@ elseif ($action === 'unapprove') {
     }
 }
 
+// Read Approved Products (ALL USERS can see ALL approved products - for Approved Gallery)
+elseif ($action === 'read_approved') {
+    if (!hasPermission($user_role, 'read')) {
+        echo json_encode(['success' => false, 'message' => 'You do not have permission to view products']);
+        exit;
+    }
+
+    try {
+        // Get ALL approved products regardless of user role - everyone can see approved products
+        $stmt = $pdo->prepare("
+            SELECT p.*, u.username as creator_username, u.full_name as creator_name,
+                   approver.username as approver_username
+            FROM products p
+            LEFT JOIN users u ON p.user_id = u.id
+            LEFT JOIN users approver ON p.approved_by = approver.id
+            WHERE p.is_approved = 1
+            ORDER BY p.created_at DESC
+        ");
+        $stmt->execute();
+        
+        $products = $stmt->fetchAll();
+
+        echo json_encode([
+            'success' => true,
+            'products' => $products,
+            'user_role' => $user_role
+        ]);
+    } catch (PDOException $e) {
+        echo json_encode(['success' => false, 'message' => 'Failed to fetch approved products: ' . $e->getMessage()]);
+    }
+}
+
 else {
     echo json_encode(['success' => false, 'message' => 'Invalid action']);
 }
