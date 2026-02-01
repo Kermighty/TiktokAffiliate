@@ -889,6 +889,56 @@
             filter: drop-shadow(0 0 5px #00d4ff);
             transform: scale(1.2);
         }
+
+
+        /* Approved Gallery Badge */
+.uploader-badge {
+    display: inline-block;
+    background: rgba(0, 212, 255, 0.2);
+    border: 1px solid rgba(0, 212, 255, 0.4);
+    padding: 5px 12px;
+    border-radius: 15px;
+    font-size: 0.85em;
+    margin-bottom: 10px;
+    color: #00d4ff;
+}
+
+.uploader-badge .role-tag {
+    background: linear-gradient(90deg, #ff0080, #ff4040);
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 0.85em;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #fff;
+    margin-right: 6px;
+}
+
+.uploader-badge .role-tag.manager {
+    background: linear-gradient(90deg, #00d4ff, #0080ff);
+}
+
+.approved-ribbon {
+    position: absolute;
+    top: 10px;
+    right: -35px;
+    background: linear-gradient(135deg, #00ff88, #00d4ff);
+    color: #000;
+    padding: 5px 40px;
+    font-size: 11px;
+    font-weight: bold;
+    transform: rotate(45deg);
+    box-shadow: 0 3px 10px rgba(0, 255, 136, 0.4);
+}
+
+
+
+
+
+
+
+
+
     </style>
 </head>
 <body>
@@ -987,6 +1037,7 @@
                 <!-- Admin and Manager only tabs -->
                 <button data-tab="admin" id="adminTab" style="display: none;">👥 User Management</button>
                 <button data-tab="logs" id="logsTab" style="display: none;">📋 Activity Logs</button>
+                <button data-tab="approved" id="approvedTab" style="display: none;">🏆 Approved Gallery</button>
             </div>
 
             <!-- Add Product Tab -->
@@ -1187,7 +1238,7 @@
                 </div>
             </div>
 
-            <!-- Activity Logs Tab (Admin & Manager) -->
+<!-- Activity Logs Tab (Admin & Manager) -->
             <div id="logs-tab" class="tab-content">
                 <div class="form-section">
                     <h2 style="margin-bottom: 20px; color: #ff0080;">📋 Activity Logs</h2>
@@ -1195,6 +1246,71 @@
                         <div style="text-align: center; padding: 40px; color: #aaa;">Loading activity logs...</div>
                     </div>
                 </div>
+            </div>
+
+            <!-- Approved Gallery Tab (Admin & Manager Only) -->
+            <div id="approved-tab" class="tab-content">
+                <div class="form-section">
+                    <h2 style="margin-bottom: 20px; color: #ff0080;">🏆 Approved Gallery - Gold Standard Products</h2>
+                    <p style="color: #aaa; margin-bottom: 25px;">Browse products vetted and approved by Admins & Managers</p>
+        
+                    <!-- Gallery Stats -->
+                    <div class="stats-grid" id="galleryStats" style="margin-bottom: 30px;">
+                        <div class="stat-card">
+                            <h3 id="galleryTotalApproved">0</h3>
+                            <p>Total Approved</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3 id="galleryAvgScore">0</h3>
+                            <p>Average Score</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3 id="galleryCategories">0</h3>
+                            <p>Categories</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3 id="galleryContributors">0</h3>
+                            <p>Contributors</p>
+                        </div>
+                    </div>
+
+                    <!-- Filters -->
+                    <div class="filter-grid" style="margin-bottom: 20px;">
+                        <div class="form-group">
+                            <label>Filter by Category</label>
+                            <select id="galleryFilterCategory">
+                                <option value="">All Categories</option>
+                                <option value="Electronics">Electronics</option>
+                                <option value="Fashion">Fashion</option>
+                                <option value="Beauty">Beauty</option>
+                                <option value="Home">Home & Garden</option>
+                                <option value="Sports">Sports & Fitness</option>
+                                <option value="Toys">Toys & Games</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Sort By</label>
+                            <select id="gallerySortBy">
+                                <option value="score_desc">Highest Score</option>
+                                <option value="score_asc">Lowest Score</option>
+                                <option value="date_desc">Newest First</option>
+                                <option value="date_asc">Oldest First</option>
+                                <option value="price_desc">Highest Price</option>
+                                <option value="price_asc">Lowest Price</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="display: flex; align-items: flex-end;">
+                            <button class="btn" id="applyGalleryFiltersBtn" style="padding: 12px 20px; font-size: 14px; width: 100%;">Apply Filters</button>
+                        </div>
+                        <div class="form-group" style="display: flex; align-items: flex-end;">
+                            <button class="btn" id="resetGalleryFiltersBtn" style="padding: 12px 20px; font-size: 14px; background: rgba(255, 255, 255, 0.1); width: 100%;">Reset</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gallery Products Grid -->
+                <div id="approvedGalleryContainer" class="products-grid"></div>
             </div>
 
         </div>
@@ -1315,9 +1431,11 @@
                 if (currentUser.role === 'admin') {
                     document.getElementById('adminTab').style.display = 'block';
                     document.getElementById('logsTab').style.display = 'block';
+                     document.getElementById('approvedTab').style.display = 'block';
                     document.getElementById('filterApprovalGroup').style.display = 'block';
                 } else if (currentUser.role === 'manager') {
                     document.getElementById('logsTab').style.display = 'block';
+                     document.getElementById('approvedTab').style.display = 'block';
                     document.getElementById('filterApprovalGroup').style.display = 'block';
                 } else {
                     // Hide approval filter for regular users
@@ -1326,6 +1444,140 @@
             }
             initializeStarRating();
         }
+
+
+        // Load Approved Gallery
+function loadApprovedGallery() {
+    const container = document.getElementById('approvedGalleryContainer');
+    container.innerHTML = '<div class="loading">Loading approved products...</div>';
+
+    // Filter approved products
+    const category = document.getElementById('galleryFilterCategory').value;
+    const sortBy = document.getElementById('gallerySortBy').value;
+
+    let approvedProducts = products.filter(p => p.is_approved == 1);
+
+    // Apply category filter
+    if (category) {
+        approvedProducts = approvedProducts.filter(p => p.category === category);
+    }
+
+    // Apply sorting
+    approvedProducts.sort((a, b) => {
+        switch(sortBy) {
+            case 'score_desc': return parseFloat(b.score) - parseFloat(a.score);
+            case 'score_asc': return parseFloat(a.score) - parseFloat(b.score);
+            case 'date_desc': return b.id - a.id;
+            case 'date_asc': return a.id - b.id;
+            case 'price_desc': return parseFloat(b.price) - parseFloat(a.price);
+            case 'price_asc': return parseFloat(a.price) - parseFloat(b.price);
+            default: return 0;
+        }
+    });
+
+    // Update stats
+    updateGalleryStats(approvedProducts);
+
+    // Render gallery
+    renderApprovedGallery(approvedProducts);
+}
+
+// Render Approved Gallery
+function renderApprovedGallery(approvedProducts) {
+    const container = document.getElementById('approvedGalleryContainer');
+
+    if (approvedProducts.length === 0) {
+        container.innerHTML = `
+            <div class="empty-state">
+                <h3>No Approved Products Yet</h3>
+                <p>Admins and Managers need to approve products first!</p>
+            </div>
+        `;
+        return;
+    }
+
+    container.innerHTML = approvedProducts.map(p => {
+        const earnings = (parseFloat(p.price) * parseFloat(p.commission_rate)) / 100;
+        const uploaderRole = p.creator_username ? 'user' : 'unknown';
+        
+        return `
+            <div class="product-card" style="position: relative; overflow: hidden;">
+                <div class="approved-ribbon">✓ APPROVED</div>
+                
+                ${p.creator_username ? `
+                    <div class="uploader-badge">
+                        <span class="role-tag">User</span>
+                        ${p.creator_username}
+                    </div>
+                ` : ''}
+
+                <div class="product-header">
+                    <div>
+                        <h3 class="product-title">${p.product_name}</h3>
+                        <span class="category-badge">${p.category}</span>
+                        ${p.approver_username ? `<div class="creator-info">Approved by: ${p.approver_username}</div>` : ''}
+                    </div>
+                </div>
+                
+                <div class="score-circle score-${p.recommendation}">
+                    ${Math.round(p.score)}
+                </div>
+
+                <div class="recommendation rec-${p.recommendation}">
+                    ${p.recommendation === 'PROMOTE' ? '✅ PROMOTE' : p.recommendation === 'CONSIDER' ? '⚠️ CONSIDER' : '❌ SKIP'}
+                </div>
+
+                <div class="stats-row">
+                    <div class="stat-item">
+                        <div class="stat-label">Price</div>
+                        <div class="stat-value">₱${parseFloat(p.price).toLocaleString()}</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Commission</div>
+                        <div class="stat-value">${p.commission_rate}%</div>
+                    </div>
+                </div>
+
+                <div class="stat-item" style="margin-bottom: 10px; background: rgba(0, 212, 255, 0.1);">
+                    <div class="stat-label" style="color: #00ff88;">You Earn (Per Sale)</div>
+                    <div class="stat-value" style="color: #00ff88;">₱${earnings.toLocaleString(undefined, {minimumFractionDigits: 2})}</div>
+                </div>
+
+                <div class="stat-item">
+                    <div class="stat-label">Product Rating</div>
+                    <div class="stat-value" style="color: #ffd700;">${p.quality_rating}/5 ★</div>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+// Update Gallery Stats
+function updateGalleryStats(approvedProducts) {
+    const totalApproved = approvedProducts.length;
+    const avgScore = totalApproved > 0 
+        ? (approvedProducts.reduce((sum, p) => sum + parseFloat(p.score), 0) / totalApproved).toFixed(1)
+        : 0;
+    const categories = [...new Set(approvedProducts.map(p => p.category))].length;
+    const contributors = [...new Set(approvedProducts.map(p => p.creator_username).filter(Boolean))].length;
+
+    document.getElementById('galleryTotalApproved').textContent = totalApproved;
+    document.getElementById('galleryAvgScore').textContent = avgScore;
+    document.getElementById('galleryCategories').textContent = categories;
+    document.getElementById('galleryContributors').textContent = contributors;
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
         // Check authentication
         function checkAuth() {
@@ -1737,6 +1989,10 @@
             if (tabName === 'logs' && (currentUser.role === 'admin' || currentUser.role === 'manager')) {
                 loadActivityLogs();
             }
+
+            if (tabName === 'approved' && (currentUser.role === 'admin' || currentUser.role === 'manager')) {
+                loadApprovedGallery();
+            }
         }
 
         // Update Compare Selects
@@ -2133,6 +2389,14 @@
             // Filter Buttons
             document.getElementById('applyFiltersBtn').addEventListener('click', applyFiltersAndSort);
             document.getElementById('resetFiltersBtn').addEventListener('click', resetFilters);
+
+            // Gallery Filter Buttons
+            document.getElementById('applyGalleryFiltersBtn').addEventListener('click', loadApprovedGallery);
+            document.getElementById('resetGalleryFiltersBtn').addEventListener('click', function() {
+            document.getElementById('galleryFilterCategory').value = '';
+            document.getElementById('gallerySortBy').value = 'score_desc';
+            loadApprovedGallery();
+            });
 
             // Compare Button
             document.getElementById('compareBtn').addEventListener('click', compareProducts);
