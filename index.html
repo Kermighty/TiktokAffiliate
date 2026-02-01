@@ -309,6 +309,14 @@
             margin-bottom: 20px;
         }
 
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+            align-items: end;
+        }
+
         .form-group {
             display: flex;
             flex-direction: column;
@@ -847,6 +855,7 @@
             .filter-grid {
                 grid-template-columns: 1fr;
             }
+            
         }
 
         input::-webkit-outer-spin-button,
@@ -930,14 +939,6 @@
     transform: rotate(45deg);
     box-shadow: 0 3px 10px rgba(0, 255, 136, 0.4);
 }
-
-
-
-
-
-
-
-
 
     </style>
 </head>
@@ -1031,14 +1032,14 @@
             </header>
 
             <div class="nav-tabs" id="navTabs">
-                <button class="active" data-tab="add">➕ Add Product</button>
-                <button data-tab="dashboard">📊 Dashboard</button>
-                <button data-tab="compare">⚖️ Compare</button>
-                <!-- Admin and Manager only tabs -->
-                <button data-tab="admin" id="adminTab" style="display: none;">👥 User Management</button>
-                <button data-tab="logs" id="logsTab" style="display: none;">📋 Activity Logs</button>
-                <button data-tab="approved" id="approvedTab" style="display: none;">🏆 Approved Gallery</button>
-            </div>
+    <button class="active" data-tab="add">➕ Add Product</button>
+    <button data-tab="dashboard">📊 Dashboard</button>
+    <button data-tab="compare">⚖️ Compare</button>
+   <button data-tab="approved" id="approvedTab">🏆 Approved Gallery</button>
+    <!-- Admin and Manager only tabs -->
+    <button data-tab="admin" id="adminTab" style="display: none;">👥 User Management</button>
+    <button data-tab="logs" id="logsTab" style="display: none;">📋 Activity Logs</button>
+</div>
 
             <!-- Add Product Tab -->
             <div id="add-tab" class="tab-content active">
@@ -1248,7 +1249,7 @@
                 </div>
             </div>
 
-            <!-- Approved Gallery Tab (Admin & Manager Only) -->
+            <!-- Approved Gallery Tab (ALL USERS) -->
             <div id="approved-tab" class="tab-content">
                 <div class="form-section">
                     <h2 style="margin-bottom: 20px; color: #ff0080;">🏆 Approved Gallery - Gold Standard Products</h2>
@@ -1274,40 +1275,40 @@
                         </div>
                     </div>
 
-                    <!-- Filters -->
-                    <div class="filter-grid" style="margin-bottom: 20px;">
-                        <div class="form-group">
-                            <label>Filter by Category</label>
-                            <select id="galleryFilterCategory">
-                                <option value="">All Categories</option>
-                                <option value="Electronics">Electronics</option>
-                                <option value="Fashion">Fashion</option>
-                                <option value="Beauty">Beauty</option>
-                                <option value="Home">Home & Garden</option>
-                                <option value="Sports">Sports & Fitness</option>
-                                <option value="Toys">Toys & Games</option>
-                                <option value="Other">Other</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Sort By</label>
-                            <select id="gallerySortBy">
-                                <option value="score_desc">Highest Score</option>
-                                <option value="score_asc">Lowest Score</option>
-                                <option value="date_desc">Newest First</option>
-                                <option value="date_asc">Oldest First</option>
-                                <option value="price_desc">Highest Price</option>
-                                <option value="price_asc">Lowest Price</option>
-                            </select>
-                        </div>
-                        <div class="form-group" style="display: flex; align-items: flex-end;">
-                            <button class="btn" id="applyGalleryFiltersBtn" style="padding: 12px 20px; font-size: 14px; width: 100%;">Apply Filters</button>
-                        </div>
-                        <div class="form-group" style="display: flex; align-items: flex-end;">
-                            <button class="btn" id="resetGalleryFiltersBtn" style="padding: 12px 20px; font-size: 14px; background: rgba(255, 255, 255, 0.1); width: 100%;">Reset</button>
-                        </div>
-                    </div>
-                </div>
+<div class="filter-grid" style="margin-bottom: 20px;">
+    <div class="form-group">
+        <label>Filter by Category</label>
+        <select id="galleryFilterCategory">
+            <option value="">All Categories</option>
+            <option value="Electronics">Electronics</option>
+            <option value="Fashion">Fashion</option>
+            <option value="Beauty">Beauty</option>
+            <option value="Home">Home & Garden</option>
+            <option value="Sports">Sports & Fitness</option>
+            <option value="Toys">Toys & Games</option>
+            <option value="Other">Other</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label>Sort By</label>
+        <select id="gallerySortBy">
+            <option value="score_desc">Highest Score</option>
+            <option value="score_asc">Lowest Score</option>
+            <option value="date_desc">Newest First</option>
+            <option value="date_asc">Oldest First</option>
+            <option value="price_desc">Highest Price</option>
+            <option value="price_asc">Lowest Price</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label>&nbsp;</label>
+        <button class="btn" id="applyGalleryFiltersBtn">Apply Filters</button>
+    </div>
+    <div class="form-group">
+        <label>&nbsp;</label>
+        <button class="btn" id="resetGalleryFiltersBtn" style="background: rgba(255, 255, 255, 0.1);">Reset</button>
+    </div>
+</div>
 
                 <!-- Gallery Products Grid -->
                 <div id="approvedGalleryContainer" class="products-grid"></div>
@@ -1429,33 +1430,76 @@
                 
                 // Show admin/manager tabs and approval filter
                 if (currentUser.role === 'admin') {
-                    document.getElementById('adminTab').style.display = 'block';
-                    document.getElementById('logsTab').style.display = 'block';
-                     document.getElementById('approvedTab').style.display = 'block';
-                    document.getElementById('filterApprovalGroup').style.display = 'block';
-                } else if (currentUser.role === 'manager') {
-                    document.getElementById('logsTab').style.display = 'block';
-                     document.getElementById('approvedTab').style.display = 'block';
-                    document.getElementById('filterApprovalGroup').style.display = 'block';
-                } else {
-                    // Hide approval filter for regular users
-                    document.getElementById('filterApprovalGroup').style.display = 'none';
-                }
+    document.getElementById('adminTab').style.display = 'block';
+    document.getElementById('logsTab').style.display = 'block';
+    document.getElementById('filterApprovalGroup').style.display = 'block';
+} else if (currentUser.role === 'manager') {
+    document.getElementById('logsTab').style.display = 'block';
+    document.getElementById('filterApprovalGroup').style.display = 'block';
+} else {
+    // Hide approval filter for regular users
+    document.getElementById('filterApprovalGroup').style.display = 'none';
+}
             }
             initializeStarRating();
         }
 
 
         // Load Approved Gallery
+// Load Approved Gallery
 function loadApprovedGallery() {
     const container = document.getElementById('approvedGalleryContainer');
     container.innerHTML = '<div class="loading">Loading approved products...</div>';
 
-    // Filter approved products
-    const category = document.getElementById('galleryFilterCategory').value;
-    const sortBy = document.getElementById('gallerySortBy').value;
+    // Fetch ALL approved products using the new read_approved endpoint
+    fetch('api/products.php?action=read_approved')
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            let approvedProducts = data.products;
 
-    let approvedProducts = products.filter(p => p.is_approved == 1);
+            // Apply category filter
+            const category = document.getElementById('galleryFilterCategory').value;
+            if (category) {
+                approvedProducts = approvedProducts.filter(p => p.category === category);
+            }
+
+            // Apply sorting
+            const sortBy = document.getElementById('gallerySortBy').value;
+            approvedProducts.sort((a, b) => {
+                switch(sortBy) {
+                    case 'score_desc': return parseFloat(b.score) - parseFloat(a.score);
+                    case 'score_asc': return parseFloat(a.score) - parseFloat(b.score);
+                    case 'date_desc': return b.id - a.id;
+                    case 'date_asc': return a.id - b.id;
+                    case 'price_desc': return parseFloat(b.price) - parseFloat(a.price);
+                    case 'price_asc': return parseFloat(a.price) - parseFloat(b.price);
+                    default: return 0;
+                }
+            });
+
+            // Update stats
+            updateGalleryStats(approvedProducts);
+
+            // Render gallery
+            renderApprovedGallery(approvedProducts);
+        } else {
+            container.innerHTML = `
+                <div class="empty-state">
+                    <h3>Error Loading Gallery</h3>
+                    <p>${data.message}</p>
+                </div>
+            `;
+        }
+    })
+    .catch(err => {
+        container.innerHTML = `
+            <div class="empty-state">
+                <h3>Connection Error</h3>
+                <p>Failed to load approved products.</p>
+            </div>
+        `;
+    });
 
     // Apply category filter
     if (category) {
@@ -1990,9 +2034,9 @@ function updateGalleryStats(approvedProducts) {
                 loadActivityLogs();
             }
 
-            if (tabName === 'approved' && (currentUser.role === 'admin' || currentUser.role === 'manager')) {
-                loadApprovedGallery();
-            }
+            if (tabName === 'approved') {
+    loadApprovedGallery();
+}
         }
 
         // Update Compare Selects
@@ -2006,52 +2050,192 @@ function updateGalleryStats(approvedProducts) {
         }
 
         // Compare Products
-        function compareProducts() {
-            const id1 = document.getElementById('compareProduct1').value;
-            const id2 = document.getElementById('compareProduct2').value;
-            const resultDiv = document.getElementById('compareResult');
+        // UPDATED Compare Products Function with GOLD Star Rating
+// Replace your existing compareProducts() function with this version
 
-            if (!id1 || !id2) {
-                alert("Please select two products to compare");
-                return;
-            }
+function compareProducts() {
+    const id1 = document.getElementById('compareProduct1').value;
+    const id2 = document.getElementById('compareProduct2').value;
+    const resultDiv = document.getElementById('compareResult');
 
-            const p1 = products.find(p => p.id == id1);
-            const p2 = products.find(p => p.id == id2);
+    // Validation
+    if (!id1 || !id2) {
+        alert("Please select two products to compare");
+        return;
+    }
 
-            resultDiv.innerHTML = [p1, p2].map(product => {
-                const earnings = ((product.price * product.commission_rate) / 100).toFixed(2);
+    if (id1 === id2) {
+        alert("Please select two different products to compare");
+        return;
+    }
+
+    // Get products
+    const p1 = products.find(p => p.id == id1);
+    const p2 = products.find(p => p.id == id2);
+
+    // Calculate earnings for both products
+    const earnings1 = (parseFloat(p1.price) * parseFloat(p1.commission_rate)) / 100;
+    const earnings2 = (parseFloat(p2.price) * parseFloat(p2.commission_rate)) / 100;
+
+    // Determine winners for each category (1 = p1 wins, 2 = p2 wins, 0 = tie)
+    const commissionWinner = parseFloat(p1.commission_rate) > parseFloat(p2.commission_rate) ? 1 : 
+                            parseFloat(p1.commission_rate) < parseFloat(p2.commission_rate) ? 2 : 0;
+    
+    const priceWinner = parseFloat(p1.price) > parseFloat(p2.price) ? 1 : 
+                       parseFloat(p1.price) < parseFloat(p2.price) ? 2 : 0;
+    
+    const ratingWinner = parseFloat(p1.quality_rating) > parseFloat(p2.quality_rating) ? 1 : 
+                        parseFloat(p1.quality_rating) < parseFloat(p2.quality_rating) ? 2 : 0;
+    
+    const earningsWinner = earnings1 > earnings2 ? 1 : earnings1 < earnings2 ? 2 : 0;
+    
+    const scoreWinner = parseFloat(p1.score) > parseFloat(p2.score) ? 1 : 
+                       parseFloat(p1.score) < parseFloat(p2.score) ? 2 : 0;
+
+    // Count total wins for each product
+    let p1Wins = 0;
+    let p2Wins = 0;
+    
+    if (commissionWinner === 1) p1Wins++;
+    if (commissionWinner === 2) p2Wins++;
+    if (ratingWinner === 1) p1Wins++;
+    if (ratingWinner === 2) p2Wins++;
+    if (earningsWinner === 1) p1Wins++;
+    if (earningsWinner === 2) p2Wins++;
+    if (scoreWinner === 1) p1Wins++;
+    if (scoreWinner === 2) p2Wins++;
+
+    // Determine overall winner
+    const overallWinner = p1Wins > p2Wins ? 1 : p1Wins < p2Wins ? 2 : 0;
+
+    // Render comparison results
+    resultDiv.innerHTML = `
+        <!-- Comparison Analysis Header -->
+        <div style="grid-column: 1 / -1; background: rgba(255, 255, 255, 0.05); padding: 25px; border-radius: 15px; margin-bottom: 20px;">
+            <h2 style="color: #ff0080; margin: 0 0 20px 0; text-align: center;">📊 Comparison Analysis</h2>
+            
+            <!-- Overall Winner Banner -->
+            ${overallWinner !== 0 ? `
+                <div style="background: linear-gradient(135deg, ${overallWinner === 1 ? '#00ff88' : '#00d4ff'}, ${overallWinner === 1 ? '#00d4ff' : '#0088ff'}); padding: 20px; border-radius: 12px; text-align: center; margin-bottom: 25px;">
+                    <div style="font-size: 2em; margin-bottom: 10px;">🏆</div>
+                    <h3 style="margin: 0; color: #000; font-size: 1.5em;">Overall Winner: ${overallWinner === 1 ? p1.product_name : p2.product_name}</h3>
+                    <p style="margin: 10px 0 0 0; color: #000; font-weight: 600;">${overallWinner === 1 ? p1Wins : p2Wins} out of 4 categories won</p>
+                </div>
+            ` : `
+                <div style="background: rgba(255, 215, 0, 0.2); padding: 20px; border-radius: 12px; text-align: center; margin-bottom: 25px; border: 2px solid rgba(255, 215, 0, 0.4);">
+                    <div style="font-size: 2em; margin-bottom: 10px;">🤝</div>
+                    <h3 style="margin: 0; color: #ffd700; font-size: 1.5em;">It's a Tie!</h3>
+                    <p style="margin: 10px 0 0 0; color: #ffd700;">Both products are equally competitive</p>
+                </div>
+            `}
+
+            <!-- Category-by-Category Breakdown -->
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 20px;">
                 
-                return `
-                    <div class="product-card">
-                        <h3 class="product-title">${product.product_name}</h3>
-                        <span class="approval-badge ${product.is_approved == 1 ? 'approved' : 'pending'}">
-                            ${product.is_approved == 1 ? '✅ Approved' : '⏳ Pending'}
-                        </span>
-                        <div class="score-circle score-${product.recommendation}">${product.score}</div>
-                        
-                        <div class="stats-row">
-                            <div class="stat-item">
-                                <div class="stat-label">Price</div>
-                                <div class="stat-value">₱${parseFloat(product.price).toFixed(2)}</div>
-                            </div>
-                            <div class="stat-item">
-                                <div class="stat-label">Commission</div>
-                                <div class="stat-value">${product.commission_rate}%</div>
-                            </div>
-                            <div class="stat-item" style="grid-column: span 2; background: rgba(0, 255, 136, 0.1); border: 1px solid rgba(0, 255, 136, 0.2); margin-top: 10px;">
-                                <div class="stat-label" style="color: #00ff88;">You Earn (Per Sale)</div>
-                                <div class="stat-value" style="color: #00ff88;">₱${earnings}</div>
-                            </div>
-                            <div class="stat-item" style="grid-column: span 2;">
-                                <div class="stat-label">Product Rating</div>
-                                <div class="stat-value">${product.quality_rating}/5 ★</div>
-                            </div>
+                <!-- Commission Winner -->
+                <div style="background: rgba(0, 0, 0, 0.2); padding: 15px; border-radius: 10px; border-left: 4px solid ${commissionWinner === 1 ? '#00ff88' : commissionWinner === 2 ? '#00d4ff' : '#ffd700'};">
+                    <div style="font-size: 0.85em; color: #aaa; margin-bottom: 5px;">💰 Commission Rate</div>
+                    <div style="font-size: 1.3em; font-weight: bold; color: ${commissionWinner === 1 ? '#00ff88' : commissionWinner === 2 ? '#00d4ff' : '#ffd700'};">
+                        ${commissionWinner === 0 ? '🤝 Tie' : commissionWinner === 1 ? '🏆 ' + p1.product_name : '🏆 ' + p2.product_name}
+                    </div>
+                    <div style="font-size: 0.9em; color: #aaa; margin-top: 5px;">
+                        ${p1.commission_rate}% vs ${p2.commission_rate}%
+                    </div>
+                </div>
+
+                <!-- Earnings Winner -->
+                <div style="background: rgba(0, 0, 0, 0.2); padding: 15px; border-radius: 10px; border-left: 4px solid ${earningsWinner === 1 ? '#00ff88' : earningsWinner === 2 ? '#00d4ff' : '#ffd700'};">
+                    <div style="font-size: 0.85em; color: #aaa; margin-bottom: 5px;">💵 Earnings Per Sale</div>
+                    <div style="font-size: 1.3em; font-weight: bold; color: ${earningsWinner === 1 ? '#00ff88' : earningsWinner === 2 ? '#00d4ff' : '#ffd700'};">
+                        ${earningsWinner === 0 ? '🤝 Tie' : earningsWinner === 1 ? '🏆 ' + p1.product_name : '🏆 ' + p2.product_name}
+                    </div>
+                    <div style="font-size: 0.9em; color: #aaa; margin-top: 5px;">
+                        ₱${earnings1.toFixed(2)} vs ₱${earnings2.toFixed(2)}
+                    </div>
+                </div>
+
+                <!-- Rating Winner -->
+                <div style="background: rgba(0, 0, 0, 0.2); padding: 15px; border-radius: 10px; border-left: 4px solid ${ratingWinner === 1 ? '#00ff88' : ratingWinner === 2 ? '#00d4ff' : '#ffd700'};">
+                    <div style="font-size: 0.85em; color: #aaa; margin-bottom: 5px;">⭐ Product Rating</div>
+                    <div style="font-size: 1.3em; font-weight: bold; color: ${ratingWinner === 1 ? '#00ff88' : ratingWinner === 2 ? '#00d4ff' : '#ffd700'};">
+                        ${ratingWinner === 0 ? '🤝 Tie' : ratingWinner === 1 ? '🏆 ' + p1.product_name : '🏆 ' + p2.product_name}
+                    </div>
+                    <div style="font-size: 0.9em; color: #aaa; margin-top: 5px;">
+                        ${p1.quality_rating}/5 vs ${p2.quality_rating}/5
+                    </div>
+                </div>
+
+                <!-- Overall Score Winner -->
+                <div style="background: rgba(0, 0, 0, 0.2); padding: 15px; border-radius: 10px; border-left: 4px solid ${scoreWinner === 1 ? '#00ff88' : scoreWinner === 2 ? '#00d4ff' : '#ffd700'};">
+                    <div style="font-size: 0.85em; color: #aaa; margin-bottom: 5px;">🎯 Overall Score</div>
+                    <div style="font-size: 1.3em; font-weight: bold; color: ${scoreWinner === 1 ? '#00ff88' : scoreWinner === 2 ? '#00d4ff' : '#ffd700'};">
+                        ${scoreWinner === 0 ? '🤝 Tie' : scoreWinner === 1 ? '🏆 ' + p1.product_name : '🏆 ' + p2.product_name}
+                    </div>
+                    <div style="font-size: 0.9em; color: #aaa; margin-top: 5px;">
+                        ${Math.round(p1.score)} vs ${Math.round(p2.score)}
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Smart Recommendation -->
+            <div style="background: rgba(255, 0, 128, 0.1); padding: 15px; border-radius: 10px; border: 1px solid rgba(255, 0, 128, 0.3); text-align: center;">
+                <div style="font-weight: 600; color: #ff0080; margin-bottom: 8px;">💡 Recommendation</div>
+                <div style="color: #fff; line-height: 1.6;">
+                    ${overallWinner === 1 ? 
+                        `<strong>${p1.product_name}</strong> is the better choice overall with ${p1Wins} category wins. ${earnings1 > earnings2 ? 'It offers higher earnings per sale.' : ''} ${parseFloat(p1.quality_rating) > parseFloat(p2.quality_rating) ? 'It also has a better quality rating.' : ''}` :
+                    overallWinner === 2 ? 
+                        `<strong>${p2.product_name}</strong> is the better choice overall with ${p2Wins} category wins. ${earnings2 > earnings1 ? 'It offers higher earnings per sale.' : ''} ${parseFloat(p2.quality_rating) > parseFloat(p1.quality_rating) ? 'It also has a better quality rating.' : ''}` :
+                        `Both products are equally competitive. Consider factors like ${priceWinner === 0 ? 'your audience preferences' : 'pricing strategy'} and market demand to make your final decision.`
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Product Cards Side by Side -->
+        ${[p1, p2].map((product, index) => {
+            const earnings = (parseFloat(product.price) * parseFloat(product.commission_rate)) / 100;
+            const isWinner = (index === 0 && overallWinner === 1) || (index === 1 && overallWinner === 2);
+            
+            return `
+                <div class="product-card" style="border: 3px solid ${isWinner ? '#00ff88' : 'rgba(255, 255, 255, 0.1)'}; position: relative;">
+                    ${isWinner ? '<div style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, #00ff88, #00d4ff); padding: 5px 20px; border-radius: 20px; color: #000; font-weight: bold; font-size: 0.9em;">🏆 WINNER</div>' : ''}
+                    
+                    <h3 class="product-title" style="margin-top: ${isWinner ? '10px' : '0'};">${product.product_name}</h3>
+                    <span class="category-badge">${product.category}</span>
+                    <span class="approval-badge ${product.is_approved == 1 ? 'approved' : 'pending'}">
+                        ${product.is_approved == 1 ? '✅ Approved' : '⏳ Pending'}
+                    </span>
+                    
+                    <div class="score-circle score-${product.recommendation}">${Math.round(product.score)}</div>
+                    <div class="recommendation rec-${product.recommendation}">
+                        ${product.recommendation === 'PROMOTE' ? '✅ PROMOTE' : product.recommendation === 'CONSIDER' ? '⚠️ CONSIDER' : '❌ SKIP'}
+                    </div>
+                    
+                    <div class="stats-row">
+                        <div class="stat-item" style="background: ${priceWinner === (index + 1) ? 'rgba(0, 255, 136, 0.15)' : 'rgba(255, 255, 255, 0.05)'};">
+                            <div class="stat-label">Price ${priceWinner === (index + 1) ? '🏆' : ''}</div>
+                            <div class="stat-value">₱${parseFloat(product.price).toFixed(2)}</div>
+                        </div>
+                        <div class="stat-item" style="background: ${commissionWinner === (index + 1) ? 'rgba(0, 255, 136, 0.15)' : 'rgba(255, 255, 255, 0.05)'};">
+                            <div class="stat-label">Commission ${commissionWinner === (index + 1) ? '🏆' : ''}</div>
+                            <div class="stat-value">${product.commission_rate}%</div>
+                        </div>
+                        <div class="stat-item" style="grid-column: span 2; background: ${earningsWinner === (index + 1) ? 'rgba(0, 255, 136, 0.2)' : 'rgba(0, 255, 136, 0.1)'}; border: 1px solid rgba(0, 255, 136, 0.2); margin-top: 10px;">
+                            <div class="stat-label" style="color: #00ff88;">You Earn (Per Sale) ${earningsWinner === (index + 1) ? '🏆' : ''}</div>
+                            <div class="stat-value" style="color: #00ff88;">₱${earnings.toFixed(2)}</div>
+                        </div>
+                        <div class="stat-item" style="grid-column: span 2; background: ${ratingWinner === (index + 1) ? 'rgba(0, 255, 136, 0.15)' : 'rgba(255, 255, 255, 0.05)'};">
+                            <div class="stat-label">Product Rating ${ratingWinner === (index + 1) ? '🏆' : ''}</div>
+                            <div class="stat-value" style="color: #ffd700;">${product.quality_rating}/5 ★</div>
                         </div>
                     </div>
-                `;
-            }).join('');
-        }
+                </div>
+            `;
+        }).join('')}
+    `;
+}
+
 
         // Load Admin Stats
         function loadAdminStats() {
