@@ -90,46 +90,6 @@
             background: rgba(255, 255, 255, 0.08);
         }
 
-        .password-wrapper {
-            position: relative;
-            width: 100%;
-        }
-
-        .password-wrapper input {
-            width: 100%;
-            padding-right: 45px;
-        }
-
-        .password-toggle {
-            position: absolute;
-            right: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 5px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s;
-        }
-
-        .password-toggle:hover {
-            transform: translateY(-50%) scale(1.1);
-        }
-
-        .password-toggle svg {
-            width: 20px;
-            height: 20px;
-            stroke: #aaa;
-            transition: stroke 0.3s;
-        }
-
-        .password-toggle:hover svg {
-            stroke: #00d4ff;
-        }
-
         .auth-btn {
             padding: 18px;
             border: none;
@@ -312,12 +272,15 @@
         .form-group {
             display: flex;
             flex-direction: column;
+            width: 100%;
         }
 
         label {
             margin-bottom: 8px;
             font-weight: 600;
             color: #00d4ff;
+            white-space: nowrap;
+            min-height: 20px;
         }
 
         input, select {
@@ -328,6 +291,7 @@
             border-radius: 8px;
             font-size: 16px;
             transition: all 0.3s;
+            width: 100%;
         }
 
         input:focus, select:focus {
@@ -404,6 +368,17 @@
         .btn-success:hover {
             background: rgba(0, 255, 136, 0.5);
             box-shadow: 0 5px 15px rgba(0, 255, 136, 0.4);
+        }
+
+        .btn-warning {
+            background: rgba(255, 165, 0, 0.3);
+            padding: 8px 20px;
+            font-size: 14px;
+        }
+
+        .btn-warning:hover {
+            background: rgba(255, 165, 0, 0.5);
+            box-shadow: 0 5px 15px rgba(255, 165, 0, 0.4);
         }
 
         .btn-danger {
@@ -580,10 +555,12 @@
             display: flex;
             gap: 10px;
             margin-top: 15px;
+            flex-wrap: wrap;
         }
 
         .action-buttons button {
             flex: 1;
+            min-width: 120px;
         }
 
         .compare-section {
@@ -681,6 +658,124 @@
             font-size: 0.85em;
         }
 
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal.show {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: rgba(26, 26, 46, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .modal-header h2 {
+            color: #ff0080;
+            font-size: 1.8em;
+        }
+
+        .close-modal {
+            background: rgba(255, 0, 128, 0.3);
+            border: none;
+            color: #fff;
+            font-size: 28px;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .close-modal:hover {
+            background: rgba(255, 0, 128, 0.6);
+            transform: rotate(90deg);
+        }
+
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+            align-items: start;
+        }
+
+        .filter-grid .form-group {
+            display: flex !important;
+            flex-direction: column !important;
+            width: 100% !important;
+        }
+
+        .filter-grid .form-group label {
+            margin-bottom: 8px !important;
+            font-weight: 600;
+            color: #00d4ff;
+            white-space: nowrap;
+            height: 20px !important;
+            line-height: 20px !important;
+        }
+
+        .filter-grid .form-group select {
+            padding: 12px !important;
+            border: 2px solid rgba(255, 255, 255, 0.1) !important;
+            background: rgba(255, 255, 255, 0.05) !important;
+            color: #fff !important;
+            border-radius: 8px !important;
+            font-size: 16px !important;
+            width: 100% !important;
+            height: 46px !important;
+            box-sizing: border-box !important;
+        }
+
+        #filterApprovalGroup {
+            display: flex !important;
+            flex-direction: column !important;
+        }
+
+        #filterApprovalGroup label {
+            margin-bottom: 8px !important;
+            height: 20px !important;
+            line-height: 20px !important;
+        }
+
+        #filterApprovalGroup select {
+            height: 46px !important;
+        }
+
+        @media (max-width: 1200px) {
+            .filter-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
         @media (max-width: 768px) {
             h1 {
                 font-size: 1.8em;
@@ -702,6 +797,15 @@
 
             .users-table {
                 font-size: 0.85em;
+            }
+
+            .action-buttons button {
+                min-width: 100px;
+                font-size: 12px;
+            }
+
+            .filter-grid {
+                grid-template-columns: 1fr;
             }
         }
 
@@ -763,15 +867,7 @@
                 </div>
                 <div class="input-group">
                     <label>Password</label>
-                    <div class="password-wrapper">
-                        <input type="password" id="loginPassword" placeholder="Enter your password" required>
-                        <button type="button" class="password-toggle" onclick="togglePassword('loginPassword', this)">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                                <circle cx="12" cy="12" r="3"></circle>
-                            </svg>
-                        </button>
-                    </div>
+                    <input type="password" id="loginPassword" placeholder="Enter your password" required>
                 </div>
                 <button type="submit" class="auth-btn">Login</button>
             </form>
@@ -805,15 +901,7 @@
                 </div>
                 <div class="input-group">
                     <label>Password</label>
-                    <div class="password-wrapper">
-                        <input type="password" id="regPassword" placeholder="Choose a password" required minlength="6">
-                        <button type="button" class="password-toggle" onclick="togglePassword('regPassword', this)">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                                <circle cx="12" cy="12" r="3"></circle>
-                            </svg>
-                        </button>
-                    </div>
+                    <input type="password" id="regPassword" placeholder="Choose a password" required minlength="6">
                 </div>
                 <button type="submit" class="auth-btn">Register</button>
             </form>
@@ -915,11 +1003,11 @@
                 </div>
             </div>
 
-<!-- Dashboard Tab -->
+            <!-- Dashboard Tab -->
             <div id="dashboard-tab" class="tab-content">
                 <div class="form-section" style="margin-bottom: 20px;">
                     <h2 style="margin-bottom: 20px; color: #ff0080;">Filter & Sort Products</h2>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px;">
+                    <div class="filter-grid">
                         <div class="form-group">
                             <label>Filter by Category</label>
                             <select id="filterCategory">
@@ -942,7 +1030,7 @@
                                 <option value="SKIP">❌ SKIP</option>
                             </select>
                         </div>
-                        <div class="form-group" id="filterApprovalGroup" style="display: none;">
+                        <div class="form-group" id="filterApprovalGroup">
                             <label>Filter by Approval</label>
                             <select id="filterApproval">
                                 <option value="">All Status</option>
@@ -1054,10 +1142,88 @@
         </div>
     </div>
 
+    <!-- Edit Product Modal -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>✏️ Edit Product</h2>
+                <button class="close-modal" onclick="closeEditModal()">&times;</button>
+            </div>
+            <div class="message error-message" id="editError"></div>
+            <div class="message success-message" id="editSuccess"></div>
+            <form id="editProductForm">
+                <input type="hidden" id="editProductId">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Product Name *</label>
+                        <input type="text" id="editProductName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Category *</label>
+                        <select id="editCategory" required>
+                            <option value="">Select Category</option>
+                            <option value="Electronics">Electronics</option>
+                            <option value="Fashion">Fashion</option>
+                            <option value="Beauty">Beauty</option>
+                            <option value="Home">Home & Garden</option>
+                            <option value="Sports">Sports & Fitness</option>
+                            <option value="Toys">Toys & Games</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Price (₱) *</label>
+                        <div class="custom-number-wrapper">
+                            <input type="number" id="editPrice" step="0.01" min="0" required>
+                            <div class="custom-arrows">
+                                <div class="up">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#ff0080" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
+                                </div>
+                                <div class="down">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#ff0080" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Commission Rate (%) *</label>
+                        <div class="custom-number-wrapper">
+                            <input type="number" id="editCommission" step="0.1" min="0" max="100" required>
+                            <div class="custom-arrows">
+                                <div class="up">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#ff0080" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
+                                </div>
+                                <div class="down">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#ff0080" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group" style="grid-column: span 2;">
+                        <label>Product Rating (1-5) *</label>
+                        <div class="star-rating" id="editStarRating">
+                            <span class="star" data-value="1">★</span>
+                            <span class="star" data-value="2">★</span>
+                            <span class="star" data-value="3">★</span>
+                            <span class="star" data-value="4">★</span>
+                            <span class="star" data-value="5">★</span>
+                        </div>
+                        <input type="hidden" id="editRating" required>
+                    </div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px;">
+                    <button type="button" class="btn" onclick="closeEditModal()" style="background: rgba(255, 255, 255, 0.1);">Cancel</button>
+                    <button type="submit" class="btn">Update Product</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script>
         let products = [];
         let filteredProducts = [];
         let selectedRating = 0;
+        let editSelectedRating = 0;
         let currentUser = null;
         let allUsers = [];
 
@@ -1087,7 +1253,7 @@
                 roleBadge.textContent = currentUser.role.toUpperCase();
                 roleBadge.className = `role-badge role-${currentUser.role}`;
                 
-                // Show admin/manager tabs
+                // Show admin/manager tabs and approval filter
                 if (currentUser.role === 'admin') {
                     document.getElementById('adminTab').style.display = 'block';
                     document.getElementById('logsTab').style.display = 'block';
@@ -1095,6 +1261,9 @@
                 } else if (currentUser.role === 'manager') {
                     document.getElementById('logsTab').style.display = 'block';
                     document.getElementById('filterApprovalGroup').style.display = 'block';
+                } else {
+                    // Hide approval filter for regular users
+                    document.getElementById('filterApprovalGroup').style.display = 'none';
                 }
             }
             initializeStarRating();
@@ -1129,7 +1298,8 @@
 
         // Star rating
         function initializeStarRating() {
-            const stars = document.querySelectorAll('.star');
+            // Star rating for add product form
+            const stars = document.querySelectorAll('#starRating .star');
             stars.forEach(star => {
                 star.addEventListener('click', function() {
                     selectedRating = parseInt(this.dataset.value);
@@ -1137,10 +1307,20 @@
                     updateStars();
                 });
             });
+
+            // Star rating for edit product modal
+            const editStars = document.querySelectorAll('#editStarRating .star');
+            editStars.forEach(star => {
+                star.addEventListener('click', function() {
+                    editSelectedRating = parseInt(this.dataset.value);
+                    document.getElementById('editRating').value = editSelectedRating;
+                    updateEditStars();
+                });
+            });
         }
 
         function updateStars() {
-            const stars = document.querySelectorAll('.star');
+            const stars = document.querySelectorAll('#starRating .star');
             stars.forEach(star => {
                 const val = parseInt(star.dataset.value);
                 if (val <= selectedRating) {
@@ -1149,6 +1329,42 @@
                     star.classList.remove('active');
                 }
             });
+        }
+
+        function updateEditStars() {
+            const stars = document.querySelectorAll('#editStarRating .star');
+            stars.forEach(star => {
+                const val = parseInt(star.dataset.value);
+                if (val <= editSelectedRating) {
+                    star.classList.add('active');
+                } else {
+                    star.classList.remove('active');
+                }
+            });
+        }
+
+        // Modal functions
+        function openEditModal(product) {
+            document.getElementById('editProductId').value = product.id;
+            document.getElementById('editProductName').value = product.product_name;
+            document.getElementById('editCategory').value = product.category;
+            document.getElementById('editPrice').value = product.price;
+            document.getElementById('editCommission').value = product.commission_rate;
+            document.getElementById('editRating').value = product.quality_rating;
+            
+            editSelectedRating = parseInt(product.quality_rating);
+            updateEditStars();
+            
+            document.getElementById('editModal').classList.add('show');
+            document.getElementById('editError').style.display = 'none';
+            document.getElementById('editSuccess').style.display = 'none';
+        }
+
+        function closeEditModal() {
+            document.getElementById('editModal').classList.remove('show');
+            document.getElementById('editProductForm').reset();
+            editSelectedRating = 0;
+            updateEditStars();
         }
 
         // Load products
@@ -1242,6 +1458,7 @@
                 const canApprove = currentUser.role === 'admin' || currentUser.role === 'manager';
                 const isOwner = p.user_id == currentUser.id;
                 const canDelete = currentUser.role === 'admin' || isOwner;
+                const canEdit = currentUser.role === 'admin' || isOwner;
                 
                 return `
                     <div class="product-card">
@@ -1287,6 +1504,11 @@
                         </div>
 
                         <div class="action-buttons">
+                            ${canEdit ? `
+                                <button class="btn btn-warning" onclick='openEditModal(${JSON.stringify(p)})'>
+                                    ✏️ Edit
+                                </button>
+                            ` : ''}
                             ${canApprove && p.is_approved == 0 ? `
                                 <button class="btn btn-success" onclick="approveProduct(${p.id})">
                                     ✅ Approve
@@ -1307,6 +1529,54 @@
                 `;
             }).join('');
         }
+
+        // Edit Product Submit
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('editProductForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const errorMsg = document.getElementById('editError');
+                const successMsg = document.getElementById('editSuccess');
+                
+                const productId = document.getElementById('editProductId').value;
+                const productName = document.getElementById('editProductName').value;
+                const category = document.getElementById('editCategory').value;
+                const price = document.getElementById('editPrice').value;
+                const commission = document.getElementById('editCommission').value;
+                const rating = document.getElementById('editRating').value;
+
+                if (!rating) {
+                    errorMsg.textContent = 'Please select a product rating';
+                    errorMsg.style.display = 'block';
+                    return;
+                }
+
+                fetch('api/products.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: `action=update&product_id=${productId}&product_name=${encodeURIComponent(productName)}&category=${encodeURIComponent(category)}&price=${price}&commission_rate=${commission}&quality_rating=${rating}`
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        successMsg.textContent = data.message;
+                        successMsg.style.display = 'block';
+                        errorMsg.style.display = 'none';
+                        
+                        setTimeout(() => {
+                            closeEditModal();
+                            loadProducts();
+                            if (currentUser.role === 'admin') {
+                                loadAdminStats();
+                            }
+                        }, 1500);
+                    } else {
+                        errorMsg.textContent = data.message;
+                        errorMsg.style.display = 'block';
+                        successMsg.style.display = 'none';
+                    }
+                });
+            });
+        });
 
         // Approve Product
         function approveProduct(id) {
@@ -1578,7 +1848,7 @@
             }
         }
 
-// Delete User
+        // Delete User
         function deleteUser(userId) {
             if (confirm('Are you sure you want to delete this user? This will also delete all their products.')) {
                 fetch('api/admin.php', {
@@ -1799,31 +2069,17 @@
                 });
             });
 
+            // Close modal on outside click
+            window.addEventListener('click', function(event) {
+                const modal = document.getElementById('editModal');
+                if (event.target === modal) {
+                    closeEditModal();
+                }
+            });
+
             // Check auth on load
             checkAuth();
         });
-
-        // Toggle Password Visibility
-        function togglePassword(inputId, button) {
-            const input = document.getElementById(inputId);
-            const svg = button.querySelector('svg');
-            
-            if (input.type === 'password') {
-                input.type = 'text';
-                // Eye with slash (hidden state)
-                svg.innerHTML = `
-                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
-                    <line x1="1" y1="1" x2="23" y2="23"></line>
-                `;
-            } else {
-                input.type = 'password';
-                // Regular eye (visible state)
-                svg.innerHTML = `
-                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                    <circle cx="12" cy="12" r="3"></circle>
-                `;
-            }
-        }
     </script>
 </body>
 </html>
