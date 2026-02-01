@@ -1092,6 +1092,8 @@
                                 <option value="">All Status</option>
                                 <option value="1">✅ Approved</option>
                                 <option value="0">⏳ Pending</option>
+                                 <option value="unapproved">❌ Unapproved</option>
+                                
                             </select>
                         </div>
                         <div class="form-group">
@@ -1457,7 +1459,7 @@
             filteredProducts = filteredProducts.filter(product => {
                 const categoryMatch = !category || product.category === category;
                 const recommendationMatch = !recommendation || product.recommendation === recommendation;
-                const approvalMatch = !approval || product.is_approved == approval;
+                const approvalMatch = !approval || (approval === 'unapproved' ? product.is_approved == 0 : product.is_approved == approval);
                 return categoryMatch && recommendationMatch && approvalMatch;
             });
 
